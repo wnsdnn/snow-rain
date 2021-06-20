@@ -49,8 +49,6 @@ function Snowy(sz, sp, sk) {
       snowArr.y += snowArr.sp;
       snowArr.x += Math.sin(snowArr.t) * ss;
       if (snowArr.y > windowH + 50) snowArr.y = Math.random() * mv;
-      if (snowArr.x > windowW + mv) snowArr.x = - mv;
-      if (snowArr.x < - mv) snowArr.x = windowW + mv;
       snowArr.draw();
     }
   }
