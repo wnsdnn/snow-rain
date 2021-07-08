@@ -24,7 +24,7 @@ const makeSnow = _ => {
         step,
         direct: "right",
     };
-    
+
     obj["stepX"] = obj.x - step;
     obj["stepX2"] = obj.x + step;
     obj.step = obj.step / 150;
@@ -42,7 +42,7 @@ const remove = snow => {
     if(snow.radius > 0) snow.radius -= 1;
     if(snow.radius <= 0) {
         snow.radius = 0;
-        
+
         const obj = makeSnow();
 
         setTimeout(() => {
@@ -95,4 +95,4 @@ const draw = _ => {
     requestAnimationFrame(draw);
 };
 
-draw();
+draw(); 
