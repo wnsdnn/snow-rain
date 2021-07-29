@@ -5,6 +5,7 @@ const menu = document.querySelector(".menu");
 const rangeBtn = document.querySelector(".menu .range-btn");
 const speedBtn = document.querySelector(".menu .speed-btn");
 const radiusBtn = document.querySelector(".menu .radius-btn");
+const mouseRadiusBtn = document.querySelector(".menu .mouseRadius-btn");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -16,17 +17,23 @@ let speed = speedBtn.value/5;
 
 let radius = Number(radiusBtn.value);
 
+const mouse = {
+    radius: 50
+};
+
 
 rangeBtn.addEventListener("input", function(){
-    range = rangeBtn.value/10;
+    range = Number(rangeBtn.value/10);
 });
 speedBtn.addEventListener("input", function(){
-    speed = speedBtn.value/5;
+    speed = Number(speedBtn.value)/5;
 });
 radiusBtn.addEventListener("input", function(){
     radius = Number(radiusBtn.value);
 });
-
+mouseRadiusBtn.addEventListener("input", function(){
+    mouse.radius = Number(mouseRadiusBtn.value);
+})
 
 
 const createSnow = function() {
@@ -36,7 +43,7 @@ const createSnow = function() {
         const rad = Math.random()*3;
         const snow = {
             x: window.innerWidth/100*Math.round(Math.random()*100),
-            y: window.innerHeight/100*Math.round(Math.random()*100),
+            y: window.innerHeight/100*Math.round(Math.random()*100), 
             radius: rad,
             speed: Math.random()*10,
             opacity: Math.random(),
@@ -55,6 +62,14 @@ const snows = createSnow();
 const drawSnow = function(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI*2);
+
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = `#fff`;
+    
+    ctx.stroke();
     
     for(let i = 0; i < snows.length; i++){
         const snow = snows[i];
@@ -62,12 +77,17 @@ const drawSnow = function(){
         ctx.beginPath();
         ctx.fillStyle = `rgba(225, 225, 225, ${snow.opacity})`;
 
-        ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI*2)
+        if( Math.pow(mouse.radius, 2) > (Math.pow(mouse.x - snow.x, 2) + Math.pow(mouse.y - snow.y, 2)) ){
+            ctx.arc(snow.x, snow.y, snow.radius/2, 0, Math.PI*2);
+        } else {
+            ctx.arc(snow.x, snow.y, snow.radius, 0, Math.PI*2);
+        }
+
         ctx.fill();
 
     }
     
-}
+};
 
 const moveSnow = function() {
 
@@ -113,11 +133,10 @@ const moveSnow = function() {
 
     }
 
-
-
     drawSnow();
     requestAnimationFrame(moveSnow);
 };
+
 moveSnow();
 
 window.addEventListener("keydown", function({key}){
@@ -126,6 +145,19 @@ window.addEventListener("keydown", function({key}){
     }
 })
 
+window.addEventListener("mousemove", function(e){
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+})
 
+window.addEventListener("mouseenter", function(e){
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+})
+
+canvas.addEventListener("mouseleave", function(e){
+    delete mouse.x
+    delete mouse.y
+})
 
 
